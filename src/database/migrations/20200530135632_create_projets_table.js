@@ -1,7 +1,9 @@
 
 exports.up = knex => knex.schema.createTable('projects', table => {
     table.increments('id')
-    table.text('title')
+    table.string('title', [25]).notNullable()
+    table.string('subtitle', [70]).notNullable()
+    table.text('content').notNullable()
 
     // relacionamentos
     table.integer('user_id')
