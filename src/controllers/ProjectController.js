@@ -51,4 +51,34 @@ module.exports = {
       next(error);
     };
   },
+  async update(req, res, next){
+    try {
+      const { user_id } = req.params
+
+      const { title, subtitle, content, id } = req.body
+
+      await knex('projects')
+      .update({ title, subtitle, content })
+      .where({ id, user_id })
+
+      return res.send()
+
+    } catch (error) {
+      next(error)
+    }
+  },
+  async delete(req, res, next){
+    try {
+      const { user_id } = req.params
+      const { id } = req.body
+
+      await knex('projects')
+      .where({ id, user_id })
+      .del();
+
+      return res.send();
+    } catch (error) {
+      next(error);
+    }
+  } 
 }

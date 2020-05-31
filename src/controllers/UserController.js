@@ -1,9 +1,27 @@
 const knex = require('../database');
 
 module.exports = {
-  async index(req, res){
-    const results = await knex('users');
-    return res.json(results);
+
+  async index(req, res, next){
+    try {
+      const { page = 1 } = req.query
+
+      const countObject = knex('users').count();
+
+      const query = knex('users')
+      .limit(5)
+      .offset((page - 1) * 5);
+
+      const [count] = await countObject;
+      res.header('X-Total-Count', count["count"]);
+
+      const results = await query;
+
+      return res.json(results);
+    } catch (error) {
+      next(error);
+    }
+
   },
   async create(req, res, next){
 
@@ -47,5 +65,5 @@ module.exports = {
       next(error)
     }
   } 
-  
+
 };
